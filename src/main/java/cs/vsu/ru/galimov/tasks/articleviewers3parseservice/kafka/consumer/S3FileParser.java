@@ -1,7 +1,6 @@
 package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.kafka.consumer;
 
 import com.google.gson.Gson;
-import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.component.NameParser;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.component.PdfToTextExtractor;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.minio.MinioTemplate;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.model.Article;
@@ -10,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 
 @Slf4j
@@ -20,17 +21,14 @@ public class S3FileParser {
 
     private final MinioTemplate template;
 
-    private final NameParser parser;
-
     private final PdfToTextExtractor extractor;
 
     private final Gson gson;
 
     @Autowired
-    public S3FileParser(ArticleService articleService, MinioTemplate template, NameParser parser, PdfToTextExtractor extractor, Gson gson) {
+    public S3FileParser(ArticleService articleService, MinioTemplate template, PdfToTextExtractor extractor, Gson gson) {
         this.articleService = articleService;
         this.template = template;
-        this.parser = parser;
         this.extractor = extractor;
         this.gson = gson;
     }
@@ -38,22 +36,20 @@ public class S3FileParser {
     @KafkaListener(topics = "${kafka.topic.name.for-s3-topic}", containerFactory = "kafkaListenerContainerFactory", concurrency = "${kafka.topic.partitions.for-s3-topic}")
     public void receive(String jsonName) {
         try {
-            String name = convertJsonToArticle(jsonName);
+            String name = convertJsonToUuid(jsonName);
 
             Article article = articleService.findByUniqUIIDS3(name);
 
-            if(article != null){
-                String link = parser.getS3Link(name);
-
-                String fullText = extractor.extractTextFromPdf(link);
+            if(article != null && Objects.equals(article.getFullText(), "")){
+                String fullText = extractor.extractTextFromPdf(name);
 
                 article.setFullText(fullText);
 
                 articleService.update(article);
 
-                template.deleteFile(name);
+                //template.deleteFile(name);
 
-                System.out.println("updated article " + article);
+                System.out.println("updated article");
             }
             else {
                 System.out.println("s3 file parser cannot find article");
@@ -64,7 +60,7 @@ public class S3FileParser {
         }
     }
 
-    private String convertJsonToArticle(String articleJson) {
-        return gson.fromJson(articleJson, String.class);
+    private String convertJsonToUuid(String uuid) {
+        return gson.fromJson(uuid, String.class);
     }
 }

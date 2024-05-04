@@ -1,19 +1,29 @@
 package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.component;
 
+import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.minio.MinioTemplate;
+import io.minio.errors.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 @Component
 public class PdfToTextExtractor {
 
-    public String extractTextFromPdf(String pdfContent) throws IOException {
-        try (InputStream in = openPdfStream(pdfContent)) {
+    private final MinioTemplate template;
+
+    @Autowired
+    public PdfToTextExtractor(MinioTemplate template) {
+        this.template = template;
+    }
+
+    public String extractTextFromPdf(String uuid) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        try (InputStream in = template.downloadFile(uuid)) {
             PDDocument document = PDDocument.load(in);
             PDFTextStripper pdfTextStripper = new PDFTextStripper();
             String result = pdfTextStripper.getText(document);
@@ -21,13 +31,4 @@ public class PdfToTextExtractor {
             return result;
         }
     }
-
-    private InputStream openPdfStream(String pdfLink) throws IOException {
-        URL url = new URL(pdfLink);
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        httpURLConnection.setRequestProperty("User-Agent", "my-agent");
-        httpURLConnection.connect();
-        return httpURLConnection.getInputStream();
-    }
-
 }

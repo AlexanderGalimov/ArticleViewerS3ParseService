@@ -1,12 +1,8 @@
 package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class DateArchive {
     private String info;
 
