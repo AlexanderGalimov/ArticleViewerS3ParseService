@@ -1,7 +1,6 @@
 package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.kafka.producer;
 
 import com.google.gson.Gson;
-import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.model.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,13 +20,13 @@ public class GraphProducer {
         this.gson = gson;
     }
 
-    public void send(String topic, Article article) {
-        String articleToJson = convertArticleToJson(article);
+    public void send(String topic, String articleId) {
+        String articleToJson = convertArticleToJson(articleId);
         kafkaTemplate.send(topic, articleToJson);
     }
 
-    private String convertArticleToJson(Article article) {
-        return gson.toJson(article);
+    private String convertArticleToJson(String articleId) {
+        return gson.toJson(articleId);
     }
 }
 
