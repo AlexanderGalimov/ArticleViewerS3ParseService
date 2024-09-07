@@ -2,8 +2,8 @@ package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.kafka.consumer;
 
 import com.google.gson.Gson;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.component.PdfToTextExtractor;
-import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.kafka.producer.GraphProducer;
-import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.kafka.topic.GraphTopic;
+import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.kafka.producer.SummaryProducer;
+import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.kafka.topic.SummaryTopic;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.minio.MinioTemplate;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.model.Article;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.service.ArticleService;
@@ -27,12 +27,12 @@ public class S3FileParser {
 
     private final Gson gson;
 
-    private final GraphProducer producer;
+    private final SummaryProducer producer;
 
-    private final GraphTopic topic;
+    private final SummaryTopic topic;
 
     @Autowired
-    public S3FileParser(ArticleService articleService, MinioTemplate template, PdfToTextExtractor extractor, Gson gson, GraphProducer producer, GraphTopic topic) {
+    public S3FileParser(ArticleService articleService, MinioTemplate template, PdfToTextExtractor extractor, Gson gson, SummaryProducer producer, SummaryTopic topic) {
         this.articleService = articleService;
         this.template = template;
         this.extractor = extractor;
@@ -59,7 +59,7 @@ public class S3FileParser {
 
                 System.out.println("updated article");
 
-                producer.send(topic.getTopicName(), article.getId());
+                //producer.send(topic.getTopicName(), article.getId());
             }
             else {
                 System.out.println("s3 file parser cannot find article");

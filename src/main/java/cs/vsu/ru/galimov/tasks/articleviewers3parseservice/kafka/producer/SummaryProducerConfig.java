@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class GraphProducerConfig {
+public class SummaryProducerConfig {
 
     @Value("${kafka.producer.servers}")
     private String servers;

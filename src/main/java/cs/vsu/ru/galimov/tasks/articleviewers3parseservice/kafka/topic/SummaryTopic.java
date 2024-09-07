@@ -14,15 +14,15 @@ import java.util.Map;
 
 @Configuration
 @Getter
-public class GraphTopic {
+public class SummaryTopic {
 
-    @Value("${kafka.topic.name.for-graph-topic}")
+    @Value("${kafka.topic.name.for-summary-topic}")
     private String topicName;
 
-    @Value("${kafka.topic.partitions.for-graph-topic}")
+    @Value("${kafka.topic.partitions.for-summary-topic}")
     private int numPartitions;
 
-    @Value("${kafka.topic.replication-factor.for-graph-topic}")
+    @Value("${kafka.topic.replication-factor.for-summary-topic}")
     private short replicationFactor;
 
     @Value("${kafka.producer.servers}")

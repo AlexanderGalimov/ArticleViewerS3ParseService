@@ -7,7 +7,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GraphProducer {
+public class SummaryProducer {
 
     @Qualifier("kafkaTemplate")
     private final KafkaTemplate<String, String> kafkaTemplate;
@@ -15,7 +15,7 @@ public class GraphProducer {
     private final Gson gson;
 
     @Autowired
-    public GraphProducer(KafkaTemplate<String, String> kafkaTemplate, Gson gson) {
+    public SummaryProducer(KafkaTemplate<String, String> kafkaTemplate, Gson gson) {
         this.kafkaTemplate = kafkaTemplate;
         this.gson = gson;
     }
