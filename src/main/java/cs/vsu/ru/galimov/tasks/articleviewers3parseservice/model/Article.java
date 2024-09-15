@@ -30,6 +30,8 @@ public class Article {
 
     private String fullText;
 
+    private String summary;
+
     private String uniqUIIDS3;
 
     public Article(Magazine magazine, DepartmentMagazine departmentMagazine, DateArchive dateArchive, PDFParams pdfParams, String fullText) {

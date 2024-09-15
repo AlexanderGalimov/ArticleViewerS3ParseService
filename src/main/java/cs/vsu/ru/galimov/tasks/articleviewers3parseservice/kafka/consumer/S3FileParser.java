@@ -59,7 +59,7 @@ public class S3FileParser {
 
                 System.out.println("updated article");
 
-                //producer.send(topic.getTopicName(), article.getId());
+                producer.send(topic.getTopicName(), article.getUniqUIIDS3());
             }
             else {
                 System.out.println("s3 file parser cannot find article");
