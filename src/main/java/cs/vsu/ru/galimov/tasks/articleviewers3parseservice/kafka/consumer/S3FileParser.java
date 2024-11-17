@@ -8,6 +8,8 @@ import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.minio.MinioTemplate;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.model.Article;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,8 @@ public class S3FileParser {
 
     private final SummaryTopic topic;
 
+    private final Logger logger = LoggerFactory.getLogger(S3FileParser.class);
+
     @Autowired
     public S3FileParser(ArticleService articleService, MinioTemplate template, PdfToTextExtractor extractor, Gson gson, SummaryProducer producer, SummaryTopic topic) {
         this.articleService = articleService;
@@ -48,7 +52,7 @@ public class S3FileParser {
 
             Article article = articleService.findByUniqUIIDS3(name);
 
-            if(article != null && Objects.equals(article.getFullText(), "")){
+            if (article != null && Objects.equals(article.getFullText(), "")) {
                 String fullText = extractor.extractTextFromPdf(name);
 
                 article.setFullText(fullText);
@@ -57,16 +61,14 @@ public class S3FileParser {
 
                 template.deleteFile(name);
 
-                System.out.println("updated article");
+                logger.info("Updated article with name: " + name);
 
                 producer.send(topic.getTopicName(), article.getUniqUIIDS3());
+            } else {
+                logger.error("s3 file parser cannot find article with name: " + name);
             }
-            else {
-                System.out.println("s3 file parser cannot find article");
-            }
-
         } catch (Exception e) {
-            System.out.println("Error in kafka listen" + e.getMessage());
+            logger.error("Error in kafka listen" + e.getMessage());
         }
     }
 

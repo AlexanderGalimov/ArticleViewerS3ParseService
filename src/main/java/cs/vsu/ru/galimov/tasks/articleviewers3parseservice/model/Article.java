@@ -30,7 +30,9 @@ public class Article {
 
     private String fullText;
 
-    private String summary;
+    private List<String> keywords;
+
+    private String annotation;
 
     private String uniqUIIDS3;
 
