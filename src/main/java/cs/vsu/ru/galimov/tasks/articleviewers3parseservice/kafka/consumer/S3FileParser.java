@@ -1,10 +1,10 @@
 package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.kafka.consumer;
 
 import com.google.gson.Gson;
-import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.component.PdfToTextExtractor;
+import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.component.activity.ActivityMonitor;
+import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.component.pdf.PdfToTextExtractor;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.kafka.producer.SummaryProducer;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.kafka.topic.SummaryTopic;
-import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.minio.MinioTemplate;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.model.Article;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +23,6 @@ public class S3FileParser {
 
     private final ArticleService articleService;
 
-    private final MinioTemplate template;
-
     private final PdfToTextExtractor extractor;
 
     private final Gson gson;
@@ -35,14 +33,16 @@ public class S3FileParser {
 
     private final Logger logger = LoggerFactory.getLogger(S3FileParser.class);
 
+    private final ActivityMonitor monitor;
+
     @Autowired
-    public S3FileParser(ArticleService articleService, MinioTemplate template, PdfToTextExtractor extractor, Gson gson, SummaryProducer producer, SummaryTopic topic) {
+    public S3FileParser(ArticleService articleService, PdfToTextExtractor extractor, Gson gson, SummaryProducer producer, SummaryTopic topic, ActivityMonitor monitor) {
         this.articleService = articleService;
-        this.template = template;
         this.extractor = extractor;
         this.gson = gson;
         this.producer = producer;
         this.topic = topic;
+        this.monitor = monitor;
     }
 
     @KafkaListener(topics = "${kafka.topic.name.for-s3-topic}", containerFactory = "kafkaListenerContainerFactory", concurrency = "${kafka.topic.partitions.for-s3-topic}")
@@ -59,11 +59,11 @@ public class S3FileParser {
 
                 articleService.update(article);
 
-                template.deleteFile(name);
-
                 logger.info("Updated article with name: " + name);
 
                 producer.send(topic.getTopicName(), article.getUniqUIIDS3());
+
+                monitor.updateLastActivity();
             } else {
                 logger.error("s3 file parser cannot find article with name: " + name);
             }

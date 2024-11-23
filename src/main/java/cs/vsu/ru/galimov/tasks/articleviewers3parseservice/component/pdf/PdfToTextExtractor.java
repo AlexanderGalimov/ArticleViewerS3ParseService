@@ -1,4 +1,4 @@
-package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.component;
+package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.component.pdf;
 
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.minio.MinioTemplate;
 import io.minio.errors.*;
