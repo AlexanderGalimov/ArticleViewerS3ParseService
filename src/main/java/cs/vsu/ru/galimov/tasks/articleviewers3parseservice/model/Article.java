@@ -32,6 +32,10 @@ public class Article {
 
     private List<String> keywords;
 
+    private List<String> lpKeywords;
+
+    private String summary;
+
     private String annotation;
 
     private String uniqUIIDS3;

@@ -1,24 +1,17 @@
 package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.minio;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.properties.MinioProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties({MinioProperties.class})
+@RequiredArgsConstructor
 public class MinioAutoConfiguration {
 
     private final MinioProperties properties;
-
-    @Autowired
-    public MinioAutoConfiguration(@Qualifier("minioProperties") MinioProperties properties) {
-        this.properties = properties;
-    }
-
 
     @Bean
     @ConditionalOnMissingBean(MinioTemplate.class)

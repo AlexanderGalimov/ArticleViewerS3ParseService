@@ -3,7 +3,7 @@ package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.service.impl;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.model.Article;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.repository.ArticleRepository;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.service.ArticleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +11,10 @@ import java.util.List;
 
 @Service
 @Component
+@RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
-
-    @Autowired
-    private ArticleServiceImpl(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
 
     @Override
     public Article insert(Article article) {

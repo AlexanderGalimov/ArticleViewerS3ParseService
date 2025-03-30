@@ -2,10 +2,12 @@ package cs.vsu.ru.galimov.tasks.articleviewers3parseservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.kafka.annotation.EnableKafka;
 
 @SpringBootApplication
-@EnableScheduling
+@EnableConfigurationProperties
+@EnableKafka
 public class ArticleViewerS3ParseServiceApplication {
 
     public static void main(String[] args) {

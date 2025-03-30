@@ -3,19 +3,16 @@ package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.service.impl;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.model.Author;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.repository.AuthorRepository;
 import cs.vsu.ru.galimov.tasks.articleviewers3parseservice.service.AuthorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
-    private final AuthorRepository repository;
 
-    @Autowired
-    public AuthorServiceImpl(AuthorRepository repository) {
-        this.repository = repository;
-    }
+    private final AuthorRepository repository;
 
     @Override
     public Author insert(Author author) {
