@@ -5,7 +5,6 @@ import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
-import io.minio.RemoveObjectArgs;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.InsufficientDataException;
 import io.minio.errors.InternalException;
@@ -40,13 +39,6 @@ public class MinioTemplate {
 
     public InputStream downloadFile(String objectName) throws IOException, InvalidKeyException, NoSuchAlgorithmException, ServerException, InsufficientDataException, ErrorResponseException, InternalException, InvalidResponseException, XmlParserException {
         return minioClient.getObject(GetObjectArgs.builder()
-                .bucket(bucketName)
-                .object(objectName)
-                .build());
-    }
-
-    public void deleteFile(String objectName) throws IOException, InvalidKeyException, NoSuchAlgorithmException, ServerException, InsufficientDataException, ErrorResponseException, InternalException, InvalidResponseException, XmlParserException {
-        minioClient.removeObject(RemoveObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
                 .build());

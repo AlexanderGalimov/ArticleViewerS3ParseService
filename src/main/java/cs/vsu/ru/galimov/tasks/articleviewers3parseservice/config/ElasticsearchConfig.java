@@ -17,12 +17,10 @@ public class ElasticsearchConfig {
     @Bean
     public IndexOperations createIndexIfNotExists() {
         IndexOperations indexOps = elasticsearchOperations.indexOps(IndexCoordinates.of("search_documents"));
-
         if (!indexOps.exists()) {
             indexOps.create();
             indexOps.putMapping(elasticsearchOperations.indexOps(SearchDocument.class).createMapping());
         }
-
         return indexOps;
     }
 }

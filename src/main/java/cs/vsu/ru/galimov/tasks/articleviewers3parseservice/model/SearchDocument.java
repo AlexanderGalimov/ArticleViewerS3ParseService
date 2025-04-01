@@ -1,15 +1,17 @@
 package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-@Data
-@RequiredArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Document(indexName = "search_documents")
 public class SearchDocument {

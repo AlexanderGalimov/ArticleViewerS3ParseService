@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @Component
 @RequiredArgsConstructor
@@ -16,21 +14,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
 
-    @Override
-    public Article insert(Article article) {
-        return articleRepository.insert(article);
-    }
-
-    @Override
-    public List<Article> findAll() {
-        return articleRepository.findAll();
-    }
-
-    @Override
-    public void delete(String id) {
-        Article archive = findById(id);
-        articleRepository.delete(archive);
-    }
 
     @Override
     public Article findById(String id) {
@@ -43,7 +26,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Article update(Article object) {
-        return articleRepository.save(object);
+    public void update(Article object) {
+        articleRepository.save(object);
     }
 }

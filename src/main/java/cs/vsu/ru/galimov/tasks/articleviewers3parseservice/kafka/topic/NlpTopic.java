@@ -15,7 +15,9 @@ public class NlpTopic {
     private final KafkaNlpTopicProperties properties;
 
     @Bean
-    public NewTopic createTopic() {
-        return new NewTopic(properties.getName(), properties.getPartitions(), properties.getReplicationFactor());
+    public NewTopic createNlpTopic() {
+        return new NewTopic(properties.getName(),
+                properties.getPartitions(),
+                properties.getReplicationFactor());
     }
 }

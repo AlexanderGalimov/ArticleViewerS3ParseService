@@ -2,13 +2,17 @@ package cs.vsu.ru.galimov.tasks.articleviewers3parseservice.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Document(collection = "Articles")
 @JsonDeserialize
 @JsonSerialize
@@ -39,16 +43,5 @@ public class Article {
     private String annotation;
 
     private String uniqUIIDS3;
-
-    public Article(Magazine magazine, DepartmentMagazine departmentMagazine, DateArchive dateArchive, PDFParams pdfParams, String fullText) {
-        this.magazine = magazine;
-        this.departmentMagazine = departmentMagazine;
-        this.dateArchive = dateArchive;
-        this.pdfParams = pdfParams;
-        this.fullText = fullText;
-    }
-
-    public Article() {
-    }
 }
 

@@ -45,15 +45,15 @@ public class S3FileParser {
 
                 searchDocumentService.save(new SearchDocument(article.getId(), fullText));
 
-                log.info("Updated article with name: " + uniqueName);
+                log.info("Updated article with name: {}", uniqueName);
 
                 producer.send(nlpTopicProperties.getName(), article.getUniqUIIDS3());
 
             } else {
-                log.error("s3 file parser cannot find article with name: " + uniqueName);
+                log.error("s3 file parser cannot find article with name: {}", uniqueName);
             }
         } catch (Exception e) {
-            log.error("Error in kafka listen" + e.getMessage());
+            log.error("Error in kafka listen: " + e.getMessage());
         }
     }
 }
