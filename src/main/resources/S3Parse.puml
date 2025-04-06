@@ -1,0 +1,68 @@
+@startuml
+participant "S3ParseService" as S3Parse
+participant "Kafka" as Kafka
+participant "MongoDB" as MongoDB
+participant "Elasticsearch" as ES
+participant "MinIO (S3)" as MinIO
+skinparam ParticipantPadding 20
+
+activate Kafka
+Kafka -> S3Parse: Получение uniqueS3Name
+activate S3Parse
+
+S3Parse -> MongoDB:  Поиск статьи в базе
+activate MongoDB
+
+alt Статья найдена
+    MongoDB --> S3Parse:  Статья получена
+else Ошибка поиска
+    MongoDB --> S3Parse:  "Ошибка запроса к БД"
+    deactivate MongoDB
+    S3Parse -> S3Parse:  Логирование ошибки
+    S3Parse -> Kafka:  Send to DLQ
+end
+
+alt Проверка наличия полного текста
+    S3Parse -> ES:  Наличие в Elasticsearch
+    activate ES
+    ES --> S3Parse:  Текст найден
+    deactivate ES
+
+    S3Parse -> MongoDB:  Наличие в MongoDB
+    activate MongoDB
+    MongoDB --> S3Parse:  Текст найден
+    deactivate MongoDB
+
+    S3Parse -> Kafka:  Отправка в NLP Topic
+    Kafka --> S3Parse:  ACK
+
+else Извлечение текста из PDF
+    S3Parse -> MinIO:  Загрузка PDF из S3
+    activate MinIO
+    MinIO --> S3Parse:  Получение файла
+
+    alt Успешное извлечение
+        S3Parse -> MongoDB:  Сохранение полного текста
+        activate MongoDB
+        MongoDB --> S3Parse:  Подтверждение
+        deactivate MongoDB
+
+        S3Parse -> ES:  Индексация полного текста
+        activate ES
+        ES --> S3Parse:  Подтверждение
+        deactivate ES
+
+        S3Parse -> Kafka:  Отправка uniqueS3Name
+        Kafka -> S3Parse:  ACK
+
+    else Ошибка загрузки/извлечения
+        MinIO --> S3Parse:  "Ошибка загрузки"
+        deactivate MinIO
+        S3Parse -> S3Parse:  Логирование ошибки
+        S3Parse -> Kafka:  Send to DLQ
+    end
+    deactivate S3Parse
+    deactivate Kafka
+end
+
+@enduml

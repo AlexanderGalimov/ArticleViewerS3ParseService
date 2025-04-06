@@ -35,7 +35,6 @@ public class S3FileParser {
     public void receive(String uniqueName) {
         try {
             Article article = articleService.findByUniqUIIDS3(uniqueName);
-
             if (article != null && Objects.equals(article.getFullText(), "")) {
                 String fullText = extractor.extractTextFromPdf(uniqueName);
 
