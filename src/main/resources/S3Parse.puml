@@ -19,7 +19,6 @@ else Ошибка поиска
     MongoDB --> S3Parse:  "Ошибка запроса к БД"
     deactivate MongoDB
     S3Parse -> S3Parse:  Логирование ошибки
-    S3Parse -> Kafka:  Send to DLQ
 end
 
 alt Проверка наличия полного текста
@@ -37,7 +36,7 @@ alt Проверка наличия полного текста
     Kafka --> S3Parse:  ACK
 
 else Извлечение текста из PDF
-    S3Parse -> MinIO:  Загрузка PDF из S3
+    S3Parse -> MinIO:  Загрузка PDF из MinIO
     activate MinIO
     MinIO --> S3Parse:  Получение файла
 
@@ -59,7 +58,6 @@ else Извлечение текста из PDF
         MinIO --> S3Parse:  "Ошибка загрузки"
         deactivate MinIO
         S3Parse -> S3Parse:  Логирование ошибки
-        S3Parse -> Kafka:  Send to DLQ
     end
     deactivate S3Parse
     deactivate Kafka
